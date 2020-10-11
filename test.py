@@ -1,50 +1,64 @@
-from asyncio import tasks
-import unittest as test
-from webscraper.models.bestbuy import BestBuy
-import aiohttp as http
-import asyncio
-import requests
+from webscraper.models.bestbuy import BestBuy, BestBuyCheckOut
+import regex, logging, requests, json, aiohttp, random
+from selenium.webdriver import Firefox, FirefoxOptions
+import requests, json
 from bs4 import BeautifulSoup
 import time
 
-url = "https://bestbuy.ca/en-ca/product/oculus-rift-s-vr-headset-with-touch-controllers/13542985"
+# header = None
+# with open("user-agents.json", "r") as f:
+#     headers = json.load(f)
+#     header = headers[random.randint(0, len(headers) - 1)]
+
+# headers = {
+#     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+#     "Accept-Encoding": "gzip, deflate, br",
+#     "Accept-Language": "en-US,en;q=0.9,zh;q=0.8,zh-CN;q=0.7",
+#     "Cache-Control": "no-cache",
+#     "User-Agent": header,
+#     "Postal-Code": "L8J",
+#     "Region-Code": "ON",
+#     "dnt": "1",
+#     "pragma": "no-cache",
+#     "upgrade-insecure-requests": "1",
+#     # "sec-fetch-dest": "document",
+#     # "sec-fetch-mode": "navigate",
+#     # "sec-fetch-site": "none",
+#     # "sec-fetch-user": "?1",
+# }
 
 
-async def test1():
-    tasks = []
-    models = []
+# base = "https://www.bestbuy.ca"
 
-    t1 = time.perf_counter()
-    for _ in range(30):
-        tasks.append(asyncio.create_task(BestBuy.create(url)))
+session = BestBuyCheckOut(
+    "L8J",
+    "ON",
+    BestBuy(
+        "https://www.bestbuy.ca/en-ca/product/lg-ok55-500w-bluetooth-party-system-with-karaoke-dj-effects-only-at-best-buy/14432356"
+    ),
+)
 
-    for i in tasks:
-        models.append(await i)
+atcStart = time.perf_counter()
+basketID = session.atc(1)
+atcTotal = time.perf_counter() - atcStart
+print(f"ATC time: {atcTotal}s.")
 
-    t2 = time.perf_counter()
-    print(f"Test 1: {t2-t1}s")
-
-    return len(models)
-
-
-async def test2():
-    models = []
-
-    t1 = time.perf_counter()
-    for _ in range(30):
-        models.append(await BestBuy.create(url))
-
-    t2 = time.perf_counter()
-    print(f"Test 2: {t2-t1}s")
-
-    return len(models)
+tokenStart = time.perf_counter()
+# Needed to get CSRF token
+tx = session.getToken()
+tokenTotal = time.perf_counter() - tokenStart
+print(f"Token time: {tokenTotal}s.")
+# print(tx)
 
 
-async def main():
-    await test1()
-    await test2()
+basketStart = time.perf_counter()
+res = session.getBasket()
+basketTotal = time.perf_counter() - basketStart
+print(f"Basket time: {basketTotal}s.")
 
 
-if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
+checkoutStart = time.perf_counter()
+res = session.startCheckout()
+checkoutTotal = time.perf_counter() - checkoutStart
+
+print(f"Checkout time: {checkoutTotal}s.")
