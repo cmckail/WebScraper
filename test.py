@@ -1,5 +1,6 @@
 from webscraper.models.bestbuy import BestBuy, BestBuyCheckOut
 from webscraper.models.profiles import ShoppingProfile, CreditCard
+from webscraper.utility.config import ROLES
 import regex, logging, requests, json, aiohttp, random
 from selenium.webdriver import Firefox, FirefoxOptions
 import requests, json
@@ -78,7 +79,7 @@ from Crypto.PublicKey import RSA
 # print(res)
 # print(f"Submit time: {submitTotal}s.")
 
-encrypted = CreditCard.encrypt(4263982640269299)
-# print(encrypted)
-decrypted = CreditCard.decrypt(encrypted)
-print(decrypted)
+# encrypted = CreditCard.encrypt(4263982640269299)
+# # print(encrypted)
+# decrypted = CreditCard.decrypt(encrypted)
+# print(decrypted)
