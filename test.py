@@ -1,50 +1,84 @@
-from asyncio import tasks
-import unittest as test
-from webscraper.models.bestbuy import BestBuy
-import aiohttp as http
-import asyncio
-import requests
+from webscraper.models.bestbuy import BestBuy, BestBuyCheckOut
+from webscraper.models.profiles import ShoppingProfile, CreditCard
+import regex, logging, requests, json, aiohttp, random
+from selenium.webdriver import Firefox, FirefoxOptions
+import requests, json
 from bs4 import BeautifulSoup
 import time
+from Crypto.PublicKey import RSA
 
-url = "https://bestbuy.ca/en-ca/product/oculus-rift-s-vr-headset-with-touch-controllers/13542985"
+# profile = ShoppingProfile(
+#     address="3692 Water St",
+#     city="Kitchener",
+#     country="CA",
+#     email="test@gmail.com",
+#     firstName="Test",
+#     lastName="test",
+#     phoneNumber="2894439715",
+#     postalCode="N2H5A5",
+#     province="ON",
+#     creditCardNumber="4263982640269299",
+#     cvv="837",
+#     expMonth="2",
+#     expYear="2023",
+# )
 
+# itemStart = time.perf_counter()
+# item = BestBuy(
+#     "https://www.bestbuy.ca/en-ca/product/nintendo-switch-console-with-neon-red-blue-joy-con/13817625"
+# )
+# itemTotal = time.perf_counter() - itemStart
+# print(f"Item time: {itemTotal}s.")
 
-async def test1():
-    tasks = []
-    models = []
+# session = BestBuyCheckOut(
+#     profile=profile,
+#     item=item,
+# )
 
-    t1 = time.perf_counter()
-    for _ in range(30):
-        tasks.append(asyncio.create_task(BestBuy.create(url)))
-
-    for i in tasks:
-        models.append(await i)
-
-    t2 = time.perf_counter()
-    print(f"Test 1: {t2-t1}s")
-
-    return len(models)
-
-
-async def test2():
-    models = []
-
-    t1 = time.perf_counter()
-    for _ in range(30):
-        models.append(await BestBuy.create(url))
-
-    t2 = time.perf_counter()
-    print(f"Test 2: {t2-t1}s")
-
-    return len(models)
-
-
-async def main():
-    await test1()
-    await test2()
+# statusStart = time.perf_counter()
+# print(f"Is available: {item.isAvailable}")
+# statusTotal = time.perf_counter()
+# print(f"Status time: {statusTotal}s.")
 
 
-if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
+# atcStart = time.perf_counter()
+# basketID = session.atc(1)
+# atcTotal = time.perf_counter() - atcStart
+# print(f"ATC time: {atcTotal}s.")
+
+# tokenStart = time.perf_counter()
+# # Needed to get CSRF token
+# tx = session.getToken()
+# tokenTotal = time.perf_counter() - tokenStart
+# print(f"Token time: {tokenTotal}s.")
+# # print(tx)
+
+
+# basketStart = time.perf_counter()
+# res = session.getBasket()
+# basketTotal = time.perf_counter() - basketStart
+# print(res)
+# print(f"Basket time: {basketTotal}s.")
+
+
+# checkoutStart = time.perf_counter()
+# res = session.startCheckout()
+# checkoutTotal = time.perf_counter() - checkoutStart
+# print(f"Checkout time: {checkoutTotal}s.")
+
+# paymentStart = time.perf_counter()
+# res = session.startPayment()
+# paymentTotal = time.perf_counter() - paymentStart
+# print(res)
+# print(f"Payment time: {paymentTotal}s.")
+
+# submitStart = time.perf_counter()
+# res = session.submitOrder()
+# submitTotal = time.perf_counter() - submitStart
+# print(res)
+# print(f"Submit time: {submitTotal}s.")
+
+encrypted = CreditCard.encrypt(4263982640269299)
+# print(encrypted)
+decrypted = CreditCard.decrypt(encrypted)
+print(decrypted)
