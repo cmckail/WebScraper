@@ -1,64 +1,84 @@
 from webscraper.models.bestbuy import BestBuy, BestBuyCheckOut
+from webscraper.models.profiles import ShoppingProfile, CreditCard
 import regex, logging, requests, json, aiohttp, random
 from selenium.webdriver import Firefox, FirefoxOptions
 import requests, json
 from bs4 import BeautifulSoup
 import time
+from Crypto.PublicKey import RSA
 
-# header = None
-# with open("user-agents.json", "r") as f:
-#     headers = json.load(f)
-#     header = headers[random.randint(0, len(headers) - 1)]
+# profile = ShoppingProfile(
+#     address="3692 Water St",
+#     city="Kitchener",
+#     country="CA",
+#     email="test@gmail.com",
+#     firstName="Test",
+#     lastName="test",
+#     phoneNumber="2894439715",
+#     postalCode="N2H5A5",
+#     province="ON",
+#     creditCardNumber="4263982640269299",
+#     cvv="837",
+#     expMonth="2",
+#     expYear="2023",
+# )
 
-# headers = {
-#     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-#     "Accept-Encoding": "gzip, deflate, br",
-#     "Accept-Language": "en-US,en;q=0.9,zh;q=0.8,zh-CN;q=0.7",
-#     "Cache-Control": "no-cache",
-#     "User-Agent": header,
-#     "Postal-Code": "L8J",
-#     "Region-Code": "ON",
-#     "dnt": "1",
-#     "pragma": "no-cache",
-#     "upgrade-insecure-requests": "1",
-#     # "sec-fetch-dest": "document",
-#     # "sec-fetch-mode": "navigate",
-#     # "sec-fetch-site": "none",
-#     # "sec-fetch-user": "?1",
-# }
+# itemStart = time.perf_counter()
+# item = BestBuy(
+#     "https://www.bestbuy.ca/en-ca/product/nintendo-switch-console-with-neon-red-blue-joy-con/13817625"
+# )
+# itemTotal = time.perf_counter() - itemStart
+# print(f"Item time: {itemTotal}s.")
 
+# session = BestBuyCheckOut(
+#     profile=profile,
+#     item=item,
+# )
 
-# base = "https://www.bestbuy.ca"
-
-session = BestBuyCheckOut(
-    "L8J",
-    "ON",
-    BestBuy(
-        "https://www.bestbuy.ca/en-ca/product/lg-ok55-500w-bluetooth-party-system-with-karaoke-dj-effects-only-at-best-buy/14432356"
-    ),
-)
-
-atcStart = time.perf_counter()
-basketID = session.atc(1)
-atcTotal = time.perf_counter() - atcStart
-print(f"ATC time: {atcTotal}s.")
-
-tokenStart = time.perf_counter()
-# Needed to get CSRF token
-tx = session.getToken()
-tokenTotal = time.perf_counter() - tokenStart
-print(f"Token time: {tokenTotal}s.")
-# print(tx)
+# statusStart = time.perf_counter()
+# print(f"Is available: {item.isAvailable}")
+# statusTotal = time.perf_counter()
+# print(f"Status time: {statusTotal}s.")
 
 
-basketStart = time.perf_counter()
-res = session.getBasket()
-basketTotal = time.perf_counter() - basketStart
-print(f"Basket time: {basketTotal}s.")
+# atcStart = time.perf_counter()
+# basketID = session.atc(1)
+# atcTotal = time.perf_counter() - atcStart
+# print(f"ATC time: {atcTotal}s.")
+
+# tokenStart = time.perf_counter()
+# # Needed to get CSRF token
+# tx = session.getToken()
+# tokenTotal = time.perf_counter() - tokenStart
+# print(f"Token time: {tokenTotal}s.")
+# # print(tx)
 
 
-checkoutStart = time.perf_counter()
-res = session.startCheckout()
-checkoutTotal = time.perf_counter() - checkoutStart
+# basketStart = time.perf_counter()
+# res = session.getBasket()
+# basketTotal = time.perf_counter() - basketStart
+# print(res)
+# print(f"Basket time: {basketTotal}s.")
 
-print(f"Checkout time: {checkoutTotal}s.")
+
+# checkoutStart = time.perf_counter()
+# res = session.startCheckout()
+# checkoutTotal = time.perf_counter() - checkoutStart
+# print(f"Checkout time: {checkoutTotal}s.")
+
+# paymentStart = time.perf_counter()
+# res = session.startPayment()
+# paymentTotal = time.perf_counter() - paymentStart
+# print(res)
+# print(f"Payment time: {paymentTotal}s.")
+
+# submitStart = time.perf_counter()
+# res = session.submitOrder()
+# submitTotal = time.perf_counter() - submitStart
+# print(res)
+# print(f"Submit time: {submitTotal}s.")
+
+encrypted = CreditCard.encrypt(4263982640269299)
+# print(encrypted)
+decrypted = CreditCard.decrypt(encrypted)
+print(decrypted)
