@@ -1,12 +1,26 @@
 from webscraper.models.bestbuy import BestBuy, BestBuyCheckOut
+from webscraper.models.cc import CanadaComputers
 from webscraper.models.profiles import ShoppingProfile, CreditCard
 from webscraper.utility.config import ROLES
 import regex, logging, requests, json, aiohttp, random
-from selenium.webdriver import Firefox, FirefoxOptions
+from enum import Enum
 import requests, json
 from bs4 import BeautifulSoup
 import time
 from Crypto.PublicKey import RSA
+
+
+class Sites(Enum):
+    bestbuy = BestBuy
+    cc = CanadaComputers
+
+
+item = Sites.bestbuy.value(
+    "https://www.bestbuy.ca/en-ca/product/nintendo-switch-console-with-neon-red-blue-joy-con/13817625"
+)
+
+print(item)
+
 
 # profile = ShoppingProfile(
 #     address="3692 Water St",
