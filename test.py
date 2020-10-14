@@ -1,8 +1,7 @@
 from webscraper.models.bestbuy import BestBuy, BestBuyCheckOut
 from webscraper.models.cc import CanadaComputers
 from webscraper.models.profiles import ShoppingProfile, CreditCard
-from webscraper.utility.config import ROLES
-import regex, logging, requests, json, aiohttp, random
+import regex, logging, requests, json, random
 from enum import Enum
 import requests, json
 from bs4 import BeautifulSoup
