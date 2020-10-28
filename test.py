@@ -1,4 +1,6 @@
 from datetime import datetime
+from webscraper.models.products import PriceHistoryModel
+from webscraper.flask.routes import HistoryApi
 from webscraper.models.bestbuy import BestBuy, BestBuyCheckOut
 from webscraper.models.cc import CanadComputersCheckout, CanadaComputers
 from webscraper.models.profiles import Address, ShoppingProfile, CreditCard
@@ -56,58 +58,58 @@ profile = ShoppingProfile(
 # url = "https://www.canadacomputers.com/product_info.php?cPath=11_180_181&item_id=136484&sid=kv9lsjdtpa7shoh3mvsisgsen0"
 
 
-itemStart = time.perf_counter()
-item = CanadaComputers(
-    "https://www.canadacomputers.com/product_info.php?cPath=21_273_580&item_id=089812"
-)
-itemTotal = time.perf_counter() - itemStart
-print(f"Item time: {itemTotal}s")
+# itemStart = time.perf_counter()
+# item = CanadaComputers(
+#     "https://www.canadacomputers.com/product_info.php?cPath=21_273_580&item_id=089812"
+# )
+# itemTotal = time.perf_counter() - itemStart
+# print(f"Item time: {itemTotal}s")
 
 
-checkoutStart = time.perf_counter()
-checkout = CanadComputersCheckout(profile=profile, item=item)
-checkoutTotal = time.perf_counter() - checkoutStart
-print(f"Checkout time: {checkoutTotal}s")
+# checkoutStart = time.perf_counter()
+# checkout = CanadComputersCheckout(profile=profile, item=item)
+# checkoutTotal = time.perf_counter() - checkoutStart
+# print(f"Checkout time: {checkoutTotal}s")
 
 # sidStart = time.perf_counter()
 # checkout.getSID()
 # sidTotal = time.perf_counter() - sidStart
 # print(f"SID time: {sidTotal}s")
 
-loginStart = time.perf_counter()
-res = checkout.login()
-loginTotal = time.perf_counter() - loginStart
-print(f"Login time: {loginTotal}s")
+# loginStart = time.perf_counter()
+# res = checkout.login()
+# loginTotal = time.perf_counter() - loginStart
+# print(f"Login time: {loginTotal}s")
 
-# with open("login.html", "w") as f:
+# # with open("login.html", "w") as f:
+# #     f.write(res.text)
+
+# # deleteStart = time.perf_counter()
+# # checkout.deleteCart()
+# # deleteTotal = time.perf_counter() - deleteStart
+# # print(f"Delete time: {deleteTotal}s")
+
+# atcStart = time.perf_counter()
+# res = checkout.atc()
+# atcTotal = time.perf_counter() - atcStart
+# print(f"ATC time: {atcTotal}s")
+
+# with open("atc.html", "w") as f:
 #     f.write(res.text)
 
-# deleteStart = time.perf_counter()
-# checkout.deleteCart()
-# deleteTotal = time.perf_counter() - deleteStart
-# print(f"Delete time: {deleteTotal}s")
+# # res = checkout.getCart()
 
-atcStart = time.perf_counter()
-res = checkout.atc()
-atcTotal = time.perf_counter() - atcStart
-print(f"ATC time: {atcTotal}s")
+# # with open("cart.html", "w") as f:
+# #     f.write(str(res))
+# # f.write(res.text)
 
-with open("atc.html", "w") as f:
-    f.write(res.text)
+# shippingStart = time.perf_counter()
+# res = checkout.shipping()
+# shippingTotal = time.perf_counter() - shippingStart
+# print(f"Shipping time: {shippingTotal}s")
 
-# res = checkout.getCart()
-
-# with open("cart.html", "w") as f:
-#     f.write(str(res))
-# f.write(res.text)
-
-shippingStart = time.perf_counter()
-res = checkout.shipping()
-shippingTotal = time.perf_counter() - shippingStart
-print(f"Shipping time: {shippingTotal}s")
-
-with open("shipping.html", "w") as f:
-    f.write(res.text)
+# with open("shipping.html", "w") as f:
+#     f.write(res.text)
 
 # deliveryStart = time.perf_counter()
 # res = checkout.delivery()
