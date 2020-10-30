@@ -8,6 +8,7 @@ import regex, logging, requests, json, random
 from enum import Enum
 import requests, json
 from bs4 import BeautifulSoup
+from base64 import b64decode
 import time, lxml
 from Crypto.PublicKey import RSA
 
@@ -58,16 +59,30 @@ profile = ShoppingProfile(
 # url = "https://www.canadacomputers.com/product_info.php?cPath=11_180_181&item_id=136484&sid=kv9lsjdtpa7shoh3mvsisgsen0"
 
 
+# with open("realprofile.json", "r") as f:
+#     result = json.load(f)
+
+# shippingAddress = Address(**result["shippingAddress"])
+# billingAddress = Address(**result["creditCard"]["billingAddress"])
+
+# result["creditCard"]["billingAddress"] = billingAddress
+# result["shippingAddress"] = shippingAddress
+# card = CreditCard(**result["creditCard"])
+
+# result["creditCard"] = card
+
+# profile = ShoppingProfile(**result)
+
+
 # itemStart = time.perf_counter()
-# item = CanadaComputers(
-#     "https://www.canadacomputers.com/product_info.php?cPath=21_273_580&item_id=089812"
-# )
+item = CanadaComputers(
+    "https://www.canadacomputers.com/product_info.php?cPath=21_279_275&item_id=140314"
+)
 # itemTotal = time.perf_counter() - itemStart
 # print(f"Item time: {itemTotal}s")
 
-
 # checkoutStart = time.perf_counter()
-# checkout = CanadComputersCheckout(profile=profile, item=item)
+checkout = CanadComputersCheckout(profile=profile, item=item)
 # checkoutTotal = time.perf_counter() - checkoutStart
 # print(f"Checkout time: {checkoutTotal}s")
 
@@ -81,35 +96,37 @@ profile = ShoppingProfile(
 # loginTotal = time.perf_counter() - loginStart
 # print(f"Login time: {loginTotal}s")
 
-# # with open("login.html", "w") as f:
-# #     f.write(res.text)
+# with open("login.html", "w") as f:
+#     f.write(res.text)
 
-# # deleteStart = time.perf_counter()
-# # checkout.deleteCart()
-# # deleteTotal = time.perf_counter() - deleteStart
-# # print(f"Delete time: {deleteTotal}s")
+# exit(0)
+
+# deleteStart = time.perf_counter()
+# checkout.deleteCart()
+# deleteTotal = time.perf_counter() - deleteStart
+# print(f"Delete time: {deleteTotal}s")
 
 # atcStart = time.perf_counter()
 # res = checkout.atc()
 # atcTotal = time.perf_counter() - atcStart
 # print(f"ATC time: {atcTotal}s")
 
-# with open("atc.html", "w") as f:
-#     f.write(res.text)
+# with open("atc.html", "wb") as f:
+#     f.write(res.content)
 
-# # res = checkout.getCart()
+# res = checkout.getCart()
 
-# # with open("cart.html", "w") as f:
-# #     f.write(str(res))
-# # f.write(res.text)
+# with open("cart.html", "w") as f:
+#     f.write(str(res))
+# f.write(res.text)
 
 # shippingStart = time.perf_counter()
 # res = checkout.shipping()
 # shippingTotal = time.perf_counter() - shippingStart
 # print(f"Shipping time: {shippingTotal}s")
 
-# with open("shipping.html", "w") as f:
-#     f.write(res.text)
+# with open("shipping.html", "wb") as f:
+#     f.write(res.content)
 
 # deliveryStart = time.perf_counter()
 # res = checkout.delivery()
@@ -140,11 +157,93 @@ profile = ShoppingProfile(
 # monerisTotal = time.perf_counter() - monerisStart
 # print(f"Moneris time: {monerisTotal}s")
 
+# with open("moneris-post-3dsecure.html", "wb") as f:
+#     f.write(res.content)
+
 # with open("test.json", "w") as f:
 #     f.write(res.text)
 
 # res = checkout.success()
 
+# with open("success.html", "wb") as f:
+#     f.write(res.content)
 
-# with open("success.html", "w") as f:
-#     f.write(res.text)
+
+# monerisResult = res.json()
+# if monerisResult["response"]["data"]["doVbv"] == "true":
+#     html = b64decode(monerisResult["response"]["data"]["form"])
+
+#     with open("moneris2.html", "wb") as f:
+#         f.write(html)
+
+#     soup = BeautifulSoup(str(html), "html.parser")
+
+#     form = soup.find(name="form", attrs={"name": "downloadForm"})
+#     url = form.get("action").strip()
+
+#     data = {}
+
+#     inputs = soup.find_all(name="input", attrs={"type": "hidden"})
+
+#     for input in inputs:
+#         data[input["name"]] = input["value"]
+
+#     headers = {
+#         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+#         "accept-encoding": "gzip, deflate, br",
+#         "accept-language": "en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7",
+#         "cache-control": "max-age=0",
+#         "content-type": "application/x-www-form-urlencoded",
+#         "origin": "https://www3.moneris.com",
+#         "referer": "https://www3.moneris.com/HPPDP/hprequest.php",
+#         "upgrade-insecure-requests": "1",
+#         "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.92 Safari/537.36",
+#     }
+
+#     res = checkout.session.post(url, data=data, headers=headers)
+
+#     headers["origin"] = "https://authentication.cardinalcommerce.com"
+#     headers["referer"] = res.url
+
+#     with open("3dsecure.html", "wb") as f:
+#         f.write(res.content)
+
+#     soup = BeautifulSoup(res.text, "html.parser")
+
+#     form = soup.find(name="form", attrs={"id": "TermForm"})
+#     url = form.get("action").strip()
+
+#     inputs = form.find_all(name="input", attrs={"type": "hidden"})
+#     data = {}
+
+#     for input in inputs:
+#         data[input["name"]] = input["value"]
+
+# data["PaRes"] = form.find(
+#     name="input", attrs={"type": "hidden", "name": "PaRes"}
+# ).get("value")
+
+# url += "?" + form.find(name="input", attrs={"type": "hidden", "name": "MD"}).get(
+#     "value"
+# )
+
+# res = checkout.session.post(url, data=data, headers=headers)
+
+# res = checkout.session.post(
+#     "https://www3.moneris.com/HPPDP/hprequest.php", data=data
+# )
+
+# with open("moneris-post-3dsecure.html", "wb") as f:
+#     f.write(res.content)
+
+
+with open("success.html", "r") as f:
+    soup = BeautifulSoup(f.read(), "html.parser")
+
+pattern = regex.compile(r"^Order Number: (\d+)$")
+
+order = soup.find(text=pattern)
+
+id = regex.search(pattern, order)
+
+print(id.group(1))
