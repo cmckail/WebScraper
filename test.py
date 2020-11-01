@@ -1,4 +1,5 @@
 from datetime import datetime
+from webscraper.utility.utils import add_to_database
 from webscraper.models.products import PriceHistoryModel
 from webscraper.flask.routes import HistoryApi
 from webscraper.models.bestbuy import BestBuy, BestBuyCheckOut
