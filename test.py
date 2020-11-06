@@ -11,47 +11,220 @@ from base64 import b64decode
 import time, lxml
 from Crypto.PublicKey import RSA
 
-profile = ShoppingProfile(
-    email="anthonyma940603@gmail.com",
-    actEmail="anthonyma940603@gmail.com",
-    actPassword="8290F9AF",
-    shippingAddress=Address(
-        address="3692 Water St",
-        city="Kitchener",
-        firstName="Test",
-        lastName="Test",
-        phoneNumber="2894439715",
-        province="ON",
-        postalCode="N2H5A5",
-    ),
-    creditCard=CreditCard(
-        firstName="Test",
-        lastName="Test",
-        creditCardNumber="4263982640269299",
-        cvv="837",
-        expMonth="2",
-        expYear="2023",
-        type="VISA",
-        billingAddress=Address(
-            address="3692 Water St",
-            city="Kitchener",
-            firstName="Test",
-            lastName="Test",
-            phoneNumber="2894439715",
-            province="ON",
-            postalCode="N2H5A5",
-        ),
-    ),
-)
+# profile = ShoppingProfile(
+#     email="anthonyma940603@gmail.com",
+#     actEmail="anthonyma940603@gmail.com",
+#     actPassword="8290F9AF",
+#     shippingAddress=Address(
+#         address="3692 Water St",
+#         city="Kitchener",
+#         firstName="Test",
+#         lastName="Test",
+#         phoneNumber="2894439715",
+#         province="ON",
+#         postalCode="N2H5A5",
+#     ),
+#     creditCard=CreditCard(
+#         firstName="Test",
+#         lastName="Test",
+#         creditCardNumber="4263982640269299",
+#         cvv="837",
+#         expMonth="2",
+#         expYear="2023",
+#         type="VISA",
+#         billingAddress=Address(
+#             address="3692 Water St",
+#             city="Kitchener",
+#             firstName="Test",
+#             lastName="Test",
+#             phoneNumber="2894439715",
+#             province="ON",
+#             postalCode="N2H5A5",
+#         ),
+#     ),
+# )
+
+with open("realprofile.json", "r") as f:
+    result = json.load(f)
+
+    shippingAddress = Address(**result["shippingAddress"])
+    billingAddress = Address(**result["creditCard"]["billingAddress"])
+
+    result["creditCard"]["billingAddress"] = billingAddress
+    result["shippingAddress"] = shippingAddress
+    card = CreditCard(**result["creditCard"])
+
+    result["creditCard"] = card
+
+    profile = ShoppingProfile(**result)
 
 
 item = BestBuy(
-    "https://www.bestbuy.ca/en-ca/product/amazon-fire-tv-stick-4k-media-streamer-with-alexa-voice-remote/13177766"
+    "https://www.bestbuy.ca/en-ca/product/razer-viper-esports-16000-dpi-5g-optical-sensor-gaming-mouse-black/13845995"
 )
 
 checkout = BestBuyCheckOut(profile=profile, item=item)
 
-checkout.checkout()
+order_id = checkout.checkout()
+
+print(order_id)
+
+# cookies, res = checkout.checkout()
+
+# with open("cookies.py", "w") as f:
+#     f.write(str(cookies))
+
+# with open("4-bankresponse.html", "wb") as f:
+#     f.write(res.content)
+
+# session = requests.Session()
+
+# headers = {
+#     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+#     "Accept-Encoding": "gzip, deflate, br",
+#     "Accept-Language": "en-US,en;q=0.9",
+#     "cache-control": "no-cache",
+#     "Connection": "keep-alive",
+#     "Content-Type": "application/x-www-form-urlencoded",
+#     "dnt": "1",
+#     "host": "0eaf.cardinalcommerce.com",
+#     "origin": "https://www.bestbuy.ca",
+#     "Pragma": "no-cache",
+#     "Referer": "https://www.bestbuy.ca/",
+#     "sec-fetch-dest": "iframe",
+#     "sec-fetch-mode": "navigate",
+#     "sec-fetch-site": "cross-site",
+#     "sec-fetch-user": "?1",
+#     "Upgrade-Insecure-Requests": "1",
+#     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36",
+# }
+
+# data = {
+#     "PaReq": "P.97c61ec938669abf31da9046285e9eac75a806c9d67c2c9f3bd60ceba2e4135ef8b770171d73875676563db695b65b20af4a694a10b4d1c3812320e34c610578",
+#     "MD": "30e3d92d-f2e5-42da-880d-d3d07590ae8e",
+#     "TermUrl": "https://www.bestbuy.ca/api/checkout/payment/secureauth/bankresponse",
+# }
+
+# res = session.post(
+#     "https://0eaf.cardinalcommerce.com/EAFService/jsp/v1/redirect",
+#     headers=headers,
+#     data=data,
+# )
+
+# with open("redirect.html", "wb") as f:
+#     f.write(res.content)
+
+# soup = BeautifulSoup(res.content, "html.parser")
+
+# with open("1-redirect.html", "r") as f:
+#     soup = BeautifulSoup(f.read(), "html.parser")
+
+# form = soup.find(name="form", attrs={"method": "POST"})
+# url = form["action"]
+# inputs = form.find_all(name="input", attrs={"type": "hidden"})
+
+# data = {}
+# for i in inputs:
+#     name = i["name"]
+#     value = i["value"]
+#     data[name] = value
+
+
+# headers = {
+#     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+#     "Accept-Encoding": "gzip, deflate, br",
+#     "Accept-Language": "en-US,en;q=0.9",
+#     "cache-control": "no-cache",
+#     "Connection": "keep-alive",
+#     "Content-Type": "application/x-www-form-urlencoded",
+#     "dnt": "1",
+#     "host": "authentication.cardinalcommerce.com",
+#     "origin": "https://0eaf.cardinalcommerce.com",
+#     "Pragma": "no-cache",
+#     "Referer": "https://0eaf.cardinalcommerce.com/",
+#     "sec-fetch-dest": "iframe",
+#     "sec-fetch-mode": "navigate",
+#     "sec-fetch-site": "same-site",
+#     "Upgrade-Insecure-Requests": "1",
+#     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36",
+# }
+
+
+# res = session.post(url, headers=headers, data=data)
+
+# with open("2-payer-authentication.html", "wb") as f:
+#     f.write(res.content)
+
+# with open("2-payer-authentication.html", "r") as f:
+#     soup = BeautifulSoup(f.read(), "html.parser")
+
+# form = soup.find(name="form", attrs={"id": "TermForm"})
+# url = form["action"]
+# inputs = form.find_all(name="input", attrs={"type": "hidden"})
+# data = {}
+
+# for i in inputs:
+#     data[i["name"]] = i["value"]
+
+
+# headers = {
+#     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+#     "Accept-Encoding": "gzip, deflate, br",
+#     "Accept-Language": "en-US,en;q=0.9",
+#     "cache-control": "no-cache",
+#     "Connection": "keep-alive",
+#     "Content-Type": "application/x-www-form-urlencoded",
+#     "dnt": "1",
+#     "host": "0eaf.cardinalcommerce.com",
+#     "origin": "https://authentication.cardinalcommerce.com",
+#     "Pragma": "no-cache",
+#     "Referer": "https://authentication.cardinalcommerce.com/",
+#     "sec-fetch-dest": "iframe",
+#     "sec-fetch-mode": "navigate",
+#     "sec-fetch-site": "same-site",
+#     "Upgrade-Insecure-Requests": "1",
+#     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36",
+# }
+
+# res = session.post(url, headers=headers, data=data)
+
+# with open("3-term.html", "wb") as f:
+#     f.write(res.content)
+
+# with open("3-term.html", "r") as f:
+#     soup = BeautifulSoup(f.read(), "html.parser")
+
+# form = soup.find(name="form", attrs={"method": "post"})
+# url = form["action"]
+
+# inputs = form.find_all(name="input", attrs={"type": "hidden"})
+
+# data = {}
+# for i in inputs:
+#     data[i["name"]] = i["value"]
+
+# headers = {
+#     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+#     "Accept-Encoding": "gzip, deflate, br",
+#     "Accept-Language": "en-US,en;q=0.9",
+#     "cache-control": "no-cache",
+#     "Connection": "keep-alive",
+#     "Content-Type": "application/x-www-form-urlencoded",
+#     "dnt": "1",
+#     "host": "0eaf.cardinalcommerce.com",
+#     "origin": "https://0eaf.cardinalcommerce.com",
+#     "Pragma": "no-cache",
+#     "Referer": "https://0eaf.cardinalcommerce.com/",
+#     "sec-fetch-dest": "iframe",
+#     "sec-fetch-mode": "navigate",
+#     "sec-fetch-site": "cross-site",
+#     "Upgrade-Insecure-Requests": "1",
+#     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36",
+# }
+
+# res = session.post(url, headers=headers, data=data)
+# with open("4-bankresponse.html", "wb") as f:
+#     f.write(res.content)
 
 
 # url = "https://www.canadacomputers.com/product_info.php?cPath=11_180_181&item_id=136484&sid=kv9lsjdtpa7shoh3mvsisgsen0"
