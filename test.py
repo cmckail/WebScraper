@@ -1,7 +1,5 @@
 from datetime import datetime
 from webscraper.utility.utils import add_to_database
-from webscraper.models.products import PriceHistoryModel
-from webscraper.flask.routes import HistoryApi
 from webscraper.models.bestbuy import BestBuy, BestBuyCheckOut
 from webscraper.models.cc import CanadComputersCheckout, CanadaComputers
 from webscraper.models.profiles import Address, ShoppingProfile, CreditCard
@@ -12,16 +10,6 @@ from bs4 import BeautifulSoup
 from base64 import b64decode
 import time, lxml
 from Crypto.PublicKey import RSA
-
-
-# class Sites(Enum):
-#     bestbuy = BestBuy
-#     cc = CanadaComputers
-
-
-# item = Sites.bestbuy.value(
-#     "https://www.bestbuy.ca/en-ca/product/nintendo-switch-console-with-neon-red-blue-joy-con/13817625"
-# )
 
 profile = ShoppingProfile(
     email="anthonyma940603@gmail.com",
@@ -57,6 +45,15 @@ profile = ShoppingProfile(
 )
 
 
+item = BestBuy(
+    "https://www.bestbuy.ca/en-ca/product/amazon-fire-tv-stick-4k-media-streamer-with-alexa-voice-remote/13177766"
+)
+
+checkout = BestBuyCheckOut(profile=profile, item=item)
+
+checkout.checkout()
+
+
 # url = "https://www.canadacomputers.com/product_info.php?cPath=11_180_181&item_id=136484&sid=kv9lsjdtpa7shoh3mvsisgsen0"
 
 
@@ -76,14 +73,14 @@ profile = ShoppingProfile(
 
 
 # itemStart = time.perf_counter()
-item = CanadaComputers(
-    "https://www.canadacomputers.com/product_info.php?cPath=21_279_275&item_id=140314"
-)
+# item = CanadaComputers(
+#     "https://www.canadacomputers.com/product_info.php?cPath=21_279_275&item_id=140314"
+# )
 # itemTotal = time.perf_counter() - itemStart
 # print(f"Item time: {itemTotal}s")
 
 # checkoutStart = time.perf_counter()
-checkout = CanadComputersCheckout(profile=profile, item=item)
+# checkout = CanadComputersCheckout(profile=profile, item=item)
 # checkoutTotal = time.perf_counter() - checkoutStart
 # print(f"Checkout time: {checkoutTotal}s")
 
@@ -238,13 +235,13 @@ checkout = CanadComputersCheckout(profile=profile, item=item)
 #     f.write(res.content)
 
 
-with open("success.html", "r") as f:
-    soup = BeautifulSoup(f.read(), "html.parser")
+# with open("success.html", "r") as f:
+#     soup = BeautifulSoup(f.read(), "html.parser")
 
-pattern = regex.compile(r"^Order Number: (\d+)$")
+# pattern = regex.compile(r"^Order Number: (\d+)$")
 
-order = soup.find(text=pattern)
+# order = soup.find(text=pattern)
 
-id = regex.search(pattern, order)
+# id = regex.search(pattern, order)
 
-print(id.group(1))
+# print(id.group(1))
