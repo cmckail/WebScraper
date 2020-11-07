@@ -1,7 +1,8 @@
 from datetime import datetime
+from webscraper.utility.errors import log_error
 from webscraper.utility.utils import add_to_database
 from webscraper.models.bestbuy import BestBuy, BestBuyCheckOut
-from webscraper.models.cc import CanadComputersCheckout, CanadaComputers
+from webscraper.models.cc import CanadaComputersCheckout, CanadaComputers
 from webscraper.models.profiles import Address, ShoppingProfile, CreditCard
 import regex, logging, requests, json, random
 from enum import Enum
@@ -10,6 +11,18 @@ from bs4 import BeautifulSoup
 from base64 import b64decode
 import time, lxml
 from Crypto.PublicKey import RSA
+
+# logging.basicConfig(level=(getattr(logging, "DEBUG")))
+
+
+# print(logging.getLevelName(logging.getLogger().level))
+try:
+    raise Exception("Test error")
+except Exception as e:
+    log_error(e)
+
+
+exit(0)
 
 # profile = ShoppingProfile(
 #     email="anthonyma940603@gmail.com",
