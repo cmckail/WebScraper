@@ -12,14 +12,11 @@ from base64 import b64decode
 import time, lxml
 from Crypto.PublicKey import RSA
 
-# logging.basicConfig(level=(getattr(logging, "DEBUG")))
+item = BestBuy(
+    "https://www.bestbuy.ca/en-ca/product/razer-viper-esports-16000-dpi-5g-optical-sensor-gaming-mouse-black/13845995"
+)
 
-
-# print(logging.getLevelName(logging.getLogger().level))
-try:
-    raise Exception("Test error")
-except Exception as e:
-    log_error(e)
+print(item.getAvailability())
 
 
 exit(0)
